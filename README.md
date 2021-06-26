@@ -73,7 +73,7 @@ $ git clone https://github.com/vilmarsitiodigital/ignite-reactnative-challenge-0
 $ yarn
 
 # Se tiver usando ios
-$ cd ios && pod install && cd../ 
+$ cd ios && pod install && cd ../ 
 
 # Inicie o serviço ios
 $ yarn ios
