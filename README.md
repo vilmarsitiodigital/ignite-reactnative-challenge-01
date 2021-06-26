@@ -72,8 +72,14 @@ $ git clone https://github.com/vilmarsitiodigital/ignite-reactnative-challenge-0
 # Instale as dependências
 $ yarn
 
-# Inicie o serviço
-$ yarn dev
+# Se tiver usando ios
+$ cd ios && pod install && cd../ 
+
+# Inicie o serviço ios
+$ yarn ios
+
+# Ou se tiver usando android
+$ yarn android
 ```
 
 ## 🤔 Como contribuir
