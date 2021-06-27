@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import {
   FlatList,
   TouchableOpacity,
@@ -8,15 +8,26 @@ import {
   FlatListProps,
 } from 'react-native';
 
-function FlatListHeaderComponent() {
-  return (
-    <View>
-      <Text style={styles.header}>Minhas tasks</Text>
-    </View>
-  );
+interface FlatListHeaderComponentProps {
+  isEnabled: boolean;
 }
 
+const FlatListHeaderComponent: FC<FlatListHeaderComponentProps> = ({
+  isEnabled,
+}) => {
+  return (
+    <View>
+      <Text
+        style={[styles.header, { color: isEnabled ? '#FF79C6' : '#3D3D4D' }]}
+      >
+        Minhas tasks
+      </Text>
+    </View>
+  );
+};
+
 interface MyTasksListProps {
+  isEnabled: boolean;
   tasks: {
     id: number;
     title: string;
@@ -26,7 +37,12 @@ interface MyTasksListProps {
   onLongPress: (id: number) => void;
 }
 
-export function MyTasksList({ tasks, onLongPress, onPress }: MyTasksListProps) {
+export function MyTasksList({
+  isEnabled,
+  tasks,
+  onLongPress,
+  onPress,
+}: MyTasksListProps) {
   return (
     <FlatList
       data={tasks}
@@ -36,7 +52,16 @@ export function MyTasksList({ tasks, onLongPress, onPress }: MyTasksListProps) {
           <TouchableOpacity
             testID={`button-${index}`}
             activeOpacity={0.7}
-            style={item.done ? styles.taskButtonDone : styles.taskButton}
+            style={[
+              item.done
+                ? [
+                    styles.taskButtonDone,
+                    isEnabled
+                      ? { backgroundColor: 'rgba(255, 121, 198, 0.1)' }
+                      : { backgroundColor: 'rgba(25, 61, 223, 0.1)' },
+                  ]
+                : styles.taskButton,
+            ]}
             //TODO - use onPress, onLongPress and style props
             onPress={() => onPress(item.id)}
             onLongPress={() => onLongPress(item.id)}
@@ -44,18 +69,41 @@ export function MyTasksList({ tasks, onLongPress, onPress }: MyTasksListProps) {
             <View
               testID={`marker-${index}`}
               //TODO - use style prop
-              style={item.done ? styles.taskMarkerDone : styles.taskMarker}
+              style={[
+                item.done
+                  ? [
+                      styles.taskMarkerDone,
+                      isEnabled
+                        ? { backgroundColor: '#FF79C6' }
+                        : { backgroundColor: '#273FAD' },
+                    ]
+                  : [
+                      styles.taskMarker,
+                      isEnabled
+                        ? { borderColor: '#FF79C6' }
+                        : { borderColor: '#3D3D4D' },
+                    ],
+              ]}
             />
             <Text
               //TODO - use style prop
-              style={item.done ? styles.taskTextDone : styles.taskText}
+              style={[
+                item.done
+                  ? [
+                      styles.taskTextDone,
+                      isEnabled ? { color: '#E1E1E6' } : { color: '#A09CB1' },
+                    ]
+                  : isEnabled
+                  ? { color: '#FF79C6' }
+                  : { color: '#3D3D4D' },
+              ]}
             >
               {item.title}
             </Text>
           </TouchableOpacity>
         );
       }}
-      ListHeaderComponent={<FlatListHeaderComponent />}
+      ListHeaderComponent={<FlatListHeaderComponent isEnabled={isEnabled} />}
       ListHeaderComponentStyle={{
         marginBottom: 20,
       }}
@@ -69,7 +117,6 @@ export function MyTasksList({ tasks, onLongPress, onPress }: MyTasksListProps) {
 
 const styles = StyleSheet.create({
   header: {
-    color: '#3D3D4D',
     fontSize: 24,
     fontFamily: 'Poppins-SemiBold',
   },
@@ -87,11 +134,7 @@ const styles = StyleSheet.create({
     width: 16,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#3D3D4D',
     marginRight: 10,
-  },
-  taskText: {
-    color: '#3D3D4D',
   },
   taskButtonDone: {
     flex: 1,
@@ -99,7 +142,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginBottom: 4,
     borderRadius: 4,
-    backgroundColor: 'rgba(25, 61, 223, 0.1)',
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -107,11 +149,9 @@ const styles = StyleSheet.create({
     height: 16,
     width: 16,
     borderRadius: 8,
-    backgroundColor: '#273FAD',
     marginRight: 10,
   },
   taskTextDone: {
-    color: '#A09CB1',
     textDecorationLine: 'line-through',
   },
 });

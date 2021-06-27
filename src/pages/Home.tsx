@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { View, StyleSheet } from 'react-native';
 import { Header } from '../components/Header';
 import { MyTasksList } from '../components/MyTasksList';
 import { TodoInput } from '../components/TodoInput';
@@ -40,17 +40,23 @@ export function Home() {
     setTasks(newTasks);
   }
 
-  return (
-    <>
-      <Header />
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
-      <TodoInput addTask={handleAddTask} />
+  return (
+    <View
+      style={[{ flex: 1, backgroundColor: isEnabled ? '#1F1F1F' : '#fff' }]}
+    >
+      <Header isEnabled={isEnabled} toggleSwitch={toggleSwitch} />
+
+      <TodoInput isEnabled={isEnabled ? true : false} addTask={handleAddTask} />
 
       <MyTasksList
+        isEnabled={isEnabled ? true : false}
         tasks={tasks}
         onPress={handleMarkTaskAsDone}
         onLongPress={handleRemoveTask}
       />
-    </>
+    </View>
   );
 }
